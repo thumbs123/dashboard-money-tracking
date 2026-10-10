@@ -49,11 +49,11 @@ cp .env.example .env
 
 Sesuaikan konfigurasi koneksi database:
 ```env
-POSTGRES_HOST=127.0.0.1
-POSTGRES_PORT=5433
-POSTGRES_USER=finassist
-POSTGRES_PASSWORD=PasswordDatabaseKamu
-POSTGRES_DB=finassist
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=usernamedatabase
+POSTGRES_PASSWORD=PasswordDatabase
+POSTGRES_DB=namadabatase
 ```
 
 ### 4. Jalankan Server
