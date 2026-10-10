@@ -42,36 +42,23 @@ npm install
 ```
 
 ### 3. Konfigurasi Environment Variable
-Salin file `.env.example` menjadi `.env.local`:
+Salin file `.env.example` menjadi `.env`:
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 Sesuaikan konfigurasi koneksi database:
 ```env
-# Koneksi langsung (pilihan 1)
 POSTGRES_HOST=127.0.0.1
 POSTGRES_PORT=5433
 POSTGRES_USER=finassist
 POSTGRES_PASSWORD=PasswordDatabaseKamu
 POSTGRES_DB=finassist
-
-# Atau menggunakan Connection String URL (pilihan 2 - cocok untuk Vercel / Neon / Supabase)
-# DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require
 ```
 
-### 4. Jalankan Development Server
+### 4. Jalankan Server
 ```bash
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser. Masuk menggunakan Telegram ID yang sudah terdaftar di bot Telegram.
-
----
-
-## Deploy ke Vercel
-
-1. Push repository ke GitHub.
-2. Buka [Vercel](https://vercel.com) dan impor repository ini.
-3. Tambahkan environment variable `DATABASE_URL` yang mengarah ke database PostgreSQL cloud (misalnya [Neon](https://neon.tech) atau [Supabase](https://supabase.com)).
-4. Klik **Deploy**.
+Buka [http://localhost:3000](http://localhost:3000) di browser. Masuk menggunakan Telegram ID yang sudah terdaftar.
