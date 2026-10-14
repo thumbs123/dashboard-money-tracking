@@ -9,6 +9,7 @@ import { CashflowChart } from '@/components/CashflowChart';
 import { CategoryBreakdown } from '@/components/CategoryBreakdown';
 import { AccountsWidget } from '@/components/AccountsWidget';
 import { TransactionTable } from '@/components/TransactionTable';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { DashboardOverview } from '@/types';
 import {
   Wallet,
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const [selectedMonth, setSelectedMonth] = useState('2026-10');
   const [data, setData] = useState<DashboardOverview | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const loadData = useCallback(async (month: string) => {
     setIsLoading(true);
@@ -63,29 +65,22 @@ export default function DashboardPage() {
     }
   };
 
-  // Auth checking skeleton view
+  // Auth checking & initial data loading skeleton view
   if (!data) {
-    return (
-      <div className="flex min-h-screen bg-[#f8fafc] dark:bg-[#090c15] text-slate-800 dark:text-slate-100 items-center justify-center p-6 transition-colors">
-        <div className="text-center space-y-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center font-mono font-bold animate-pulse text-sm">
-            F
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">Memverifikasi sesi & memuat data...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
     <div className="flex min-h-screen bg-[#f8fafc] dark:bg-[#090c15] text-slate-900 dark:text-slate-100 font-sans transition-colors">
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation (Desktop sticky, Mobile collapsible drawer) */}
       <Sidebar
         currentTab={currentTab}
         onTabChange={setCurrentTab}
         isLiveDb={data.isLiveDb}
         currentUser={data.currentUser}
         onLogout={handleLogout}
+        mobileOpen={mobileMenuOpen}
+        onCloseMobile={() => setMobileMenuOpen(false)}
       />
 
       {/* Main Content Area */}
@@ -96,9 +91,28 @@ export default function DashboardPage() {
           onRefresh={() => loadData(selectedMonth)}
           isLoading={isLoading}
           lastSyncTime={data.lastSyncTime}
+          onOpenMobileMenu={() => setMobileMenuOpen(true)}
         />
 
-        <div className="p-8 space-y-7 max-w-7xl mx-auto w-full">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+          {/* Demo Mode Notice Banner */}
+          {data.currentUser?.telegramId === 'demo' && (
+            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse flex-shrink-0" />
+                <span className="font-medium">
+                  Mode Demo Aktif: Menampilkan data simulasi keuangan. Semua angka dan grafik di bawah adalah simulasi.
+                </span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="text-[11px] underline hover:no-underline font-mono text-amber-800 dark:text-amber-300 flex-shrink-0 cursor-pointer"
+              >
+                Keluar Mode Demo
+              </button>
+            </div>
+          )}
+
           {/* Top 4 KPI Metric Cards */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricCard

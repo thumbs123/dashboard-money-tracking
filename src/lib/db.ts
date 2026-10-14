@@ -97,6 +97,7 @@ export async function fetchDashboardData(
   if (cleanId === 'demo') {
     return {
       ...MOCK_DASHBOARD_DATA,
+      selectedMonth: targetMonth,
       currentUser: { id: 0, name: 'Demo User', telegramId: 'demo' },
       isLiveDb: false,
       lastSyncTime: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),

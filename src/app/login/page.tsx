@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Shield, AlertCircle, HelpCircle, Lock, Sun, Moon } from 'lucide-react';
+import { ArrowRight, Shield, AlertCircle, HelpCircle, Lock, Sun, Moon, Sparkles } from 'lucide-react';
 import { useTheme } from '@/lib/useTheme';
 
 export default function LoginPage() {
@@ -37,6 +37,32 @@ export default function LoginPage() {
           data.error ||
             'ID Telegram tidak ditemukan. Pastikan Anda sudah pernah mengirim pesan ke bot agar profil terdaftar.'
         );
+        return;
+      }
+
+      router.push('/');
+      router.refresh();
+    } catch {
+      setErrorMsg('Gagal menghubungkan ke server autentikasi.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramId: 'demo' }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setErrorMsg('Gagal masuk mode demo.');
         return;
       }
 
@@ -149,6 +175,23 @@ export default function LoginPage() {
             >
               <span>{isLoading ? 'Memverifikasi ID...' : 'Akses Dashboard'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="border-t border-slate-200 dark:border-[#182030] w-full" />
+              <span className="bg-[#ffffff] dark:bg-[#101522] px-2 text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wider font-mono absolute">
+                atau
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="w-full bg-slate-50 hover:bg-slate-100 dark:bg-[#0c101c] dark:hover:bg-[#141b2a] text-slate-700 dark:text-slate-200 font-medium py-2.5 px-4 rounded-lg text-xs transition-all flex items-center justify-center gap-2 border border-slate-200 dark:border-[#1e2638] cursor-pointer disabled:opacity-50"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Masuk sebagai Demo</span>
             </button>
           </form>
         </div>
